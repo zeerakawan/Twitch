@@ -1,36 +1,51 @@
-import { GoogleLogin } from "react-google-login";
-import { useState } from "react";
-
-import Logout from "./Logout";
+import React, { useEffect } from "react";
+import { gapi } from "gapi-script";
 
 const clientId =
   "803388915075-428terbvbhf35v6vmhr2lpadnc6jtkuv.apps.googleusercontent.com";
 
 const GoogleAuth = () => {
-  const [status, setStatus] = useState(false);
+  const [status, setStatus] = React.useState(null);
+  const [signedStatus, setSignedStatus] = React.useState(null);
 
-  const onSuccess = (res) => {
-    console.log("LOGIN SUCCESS! CURRENT USER: ", res.profileObj.name);
-    setStatus(true);
+  useEffect(() => {
+    const start = () => {
+      gapi.client.init({
+        clientId: clientId,
+        scope: "email",
+      });
+      const auth = window.gapi.auth2.getAuthInstance();
+      setStatus(auth);
+
+      const isSignedStatus = auth.isSignedin.get();
+      setSignedStatus(isSignedStatus);
+    };
+
+    gapi.load("client:auth2", start);
+  }, []);
+
+  const onLogin = () => {
+    status.signIn();
+    setSignedStatus(!signedStatus);
   };
 
-  const onFailure = (res) => {
-    console.log("LOGIN FAILED! res: ", res);
+  const onLogout = () => {
+    status.signOut();
+    setSignedStatus(!signedStatus);
   };
 
   return (
-    <div className="signInButton">
-      {status ? (
-        <Logout />
+    <div>
+      {signedStatus ? (
+        <button className="ui red google button" onClick={onLogout}>
+          <i className="google icon" />
+          Logout
+        </button>
       ) : (
-        <GoogleLogin
-          clientId={clientId}
-          buttonText={"Login"}
-          onSuccess={onSuccess}
-          onFailure={onFailure}
-          cookiePolicy={"single_host_origin"}
-          isSignedIn={true}
-        />
+        <button className="ui red google button" onClick={onLogin}>
+          <i className="google icon" />
+          Login
+        </button>
       )}
     </div>
   );

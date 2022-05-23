@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import OAuth from "./google login/OAuth";
+import GoogleAuth from "./google login/GoogleAuth";
 
 const Header = () => {
   return (
@@ -12,7 +12,7 @@ const Header = () => {
         <Link to={"/"} className="item">
           All Streams
         </Link>
-        <OAuth />
+        <GoogleAuth />
       </div>
     </div>
   );
