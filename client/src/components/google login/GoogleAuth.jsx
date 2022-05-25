@@ -44,7 +44,7 @@ const GoogleAuth = () => {
       ) : (
         <button className="ui red google button" onClick={onLogin}>
           <i className="google icon" />
-          Login
+          Sign in with Google
         </button>
       )}
     </div>
