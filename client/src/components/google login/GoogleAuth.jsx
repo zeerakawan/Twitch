@@ -7,22 +7,22 @@ const clientId =
   "803388915075-428terbvbhf35v6vmhr2lpadnc6jtkuv.apps.googleusercontent.com";
 
 const GoogleAuth = (props) => {
-  const [status, setStatus] = React.useState(null);
-  const [signedStatus, setSignedStatus] = React.useState(null);
-
+  const [authStatus, setAuthStatus] = React.useState(null);
   useEffect(() => {
-    const start = () => {
-      gapi.client.init({
-        clientId: clientId,
-        scope: "",
-      });
-      const auth = window.gapi.auth2.getAuthInstance();
-      setStatus(auth.isSignedin.get());
-    };
-
-    gapi.load("client:auth2", start);
-    console.log(status);
-  }, [status]);
+    gapi.load("client:auth2", () => {
+      gapi.client
+        .init({
+          clientId: clientId,
+          scope: "email",
+        })
+        .then(() => {
+          const auth = gapi.auth2.getAuthInstance();
+          setAuthStatus(auth);
+          onAuthChange(auth.isSignedIn.get());
+          auth.isSignedIn.listen(onAuthChange);
+        });
+    });
+  }, []);
 
   const onAuthChange = (status) => {
     if (status) {
@@ -33,18 +33,18 @@ const GoogleAuth = (props) => {
   };
 
   const onLogin = () => {
-    status.signIn();
-    setSignedStatus(!signedStatus);
+    // this signin function is taken from google api library (not the action)
+    authStatus.signIn();
   };
 
   const onLogout = () => {
-    status.signOut();
-    setSignedStatus(!signedStatus);
+    // this signout function is taken from google api library (not the action)
+    authStatus.signOut();
   };
 
   return (
     <div>
-      {signedStatus ? (
+      {props.isSignedIn ? (
         <button className="ui red google button" onClick={onLogout}>
           <i className="google icon" />
           Logout
@@ -59,7 +59,13 @@ const GoogleAuth = (props) => {
   );
 };
 
-export default connect(null, {
+const mapStateToProps = (state) => {
+  return {
+    isSignedIn: state.auth.isSignedIn,
+  };
+};
+
+export default connect(mapStateToProps, {
   signIn,
   signOut,
 })(GoogleAuth);
