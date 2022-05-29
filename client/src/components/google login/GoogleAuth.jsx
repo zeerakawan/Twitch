@@ -8,7 +8,8 @@ const clientId =
 
 const GoogleAuth = ({ isSignedIn, signIn, signOut }) => {
   const [authStatus, setAuthStatus] = React.useState(null);
-  const [name, setName] = React.useState("");
+  const [userId, setUserId] = React.useState(null);
+
   useEffect(() => {
     gapi.load("client:auth2", () => {
       gapi.client
@@ -20,11 +21,7 @@ const GoogleAuth = ({ isSignedIn, signIn, signOut }) => {
           // getting signedin boolean value
           const auth = gapi.auth2.getAuthInstance();
           setAuthStatus(auth);
-
-          // to get the name of the user
-          const name = gapi.auth2.getAuthInstance().currentUser.le.wt.rV;
-          setName(name);
-
+          setUserId(auth.currentUser.get().getId());
           //trigerring the reducer functions to change the status
           onAuthChange(auth.isSignedIn.get());
 
@@ -36,16 +33,15 @@ const GoogleAuth = ({ isSignedIn, signIn, signOut }) => {
 
   const onAuthChange = (status) => {
     if (status) {
-      signIn();
+      signIn(userId);
     } else {
       signOut();
     }
   };
 
-  const onLogin = (obj) => {
+  const onLogin = () => {
     // this signin function is taken from google api library (not the action)
     authStatus.signIn();
-    console.log(obj.profileObj);
   };
 
   const onLogout = () => {
@@ -58,7 +54,7 @@ const GoogleAuth = ({ isSignedIn, signIn, signOut }) => {
       {isSignedIn ? (
         <button className="ui red google button" onClick={onLogout}>
           <i className="google icon" />
-          Logout, {name}
+          Logout
         </button>
       ) : (
         <button className="ui red google button" onClick={onLogin}>
