@@ -6,8 +6,9 @@ import { signIn, signOut } from "../../redux/actions/actions";
 const clientId =
   "803388915075-428terbvbhf35v6vmhr2lpadnc6jtkuv.apps.googleusercontent.com";
 
-const GoogleAuth = (props) => {
+const GoogleAuth = ({ isSignedIn, signIn, signOut }) => {
   const [authStatus, setAuthStatus] = React.useState(null);
+  const [name, setName] = React.useState("");
   useEffect(() => {
     gapi.load("client:auth2", () => {
       gapi.client
@@ -16,9 +17,18 @@ const GoogleAuth = (props) => {
           scope: "email",
         })
         .then(() => {
+          // getting signedin boolean value
           const auth = gapi.auth2.getAuthInstance();
           setAuthStatus(auth);
+
+          // to get the name of the user
+          const name = gapi.auth2.getAuthInstance().currentUser.le.wt.rV;
+          setName(name);
+
+          //trigerring the reducer functions to change the status
           onAuthChange(auth.isSignedIn.get());
+
+          //listennig the auth changes, so we can change the button conditionss
           auth.isSignedIn.listen(onAuthChange);
         });
     });
@@ -26,15 +36,16 @@ const GoogleAuth = (props) => {
 
   const onAuthChange = (status) => {
     if (status) {
-      props.signIn();
+      signIn();
     } else {
-      props.signOut();
+      signOut();
     }
   };
 
-  const onLogin = () => {
+  const onLogin = (obj) => {
     // this signin function is taken from google api library (not the action)
     authStatus.signIn();
+    console.log(obj.profileObj);
   };
 
   const onLogout = () => {
@@ -44,10 +55,10 @@ const GoogleAuth = (props) => {
 
   return (
     <div>
-      {props.isSignedIn ? (
+      {isSignedIn ? (
         <button className="ui red google button" onClick={onLogout}>
           <i className="google icon" />
-          Logout
+          Logout, {name}
         </button>
       ) : (
         <button className="ui red google button" onClick={onLogin}>
