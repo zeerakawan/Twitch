@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { gapi } from "gapi-script";
 import { connect } from "react-redux";
+
 import { signIn, signOut } from "../../redux/actions/actions";
 
 const clientId =
   "803388915075-428terbvbhf35v6vmhr2lpadnc6jtkuv.apps.googleusercontent.com";
 
-const GoogleAuth = ({ isSignedIn, signIn, signOut }) => {
+const GoogleAuth = ({ isSignedIn, signIn, signOut, id }) => {
   const [authStatus, setAuthStatus] = React.useState(null);
   const [userId, setUserId] = React.useState(null);
 
@@ -21,6 +22,8 @@ const GoogleAuth = ({ isSignedIn, signIn, signOut }) => {
           // getting signedin boolean value
           const auth = gapi.auth2.getAuthInstance();
           setAuthStatus(auth);
+
+          // taking userid from gapi and storing into state
           setUserId(auth.currentUser.get().getId());
           //trigerring the reducer functions to change the status
           onAuthChange(auth.isSignedIn.get());
@@ -31,6 +34,7 @@ const GoogleAuth = ({ isSignedIn, signIn, signOut }) => {
     });
   }, []);
 
+  console.log(userId);
   const onAuthChange = (status) => {
     if (status) {
       signIn(userId);
@@ -54,7 +58,7 @@ const GoogleAuth = ({ isSignedIn, signIn, signOut }) => {
       {isSignedIn ? (
         <button className="ui red google button" onClick={onLogout}>
           <i className="google icon" />
-          Logout
+          Logout {id}
         </button>
       ) : (
         <button className="ui red google button" onClick={onLogin}>
@@ -69,6 +73,7 @@ const GoogleAuth = ({ isSignedIn, signIn, signOut }) => {
 const mapStateToProps = (state) => {
   return {
     isSignedIn: state.auth.isSignedIn,
+    id: state.auth.userId,
   };
 };
 
