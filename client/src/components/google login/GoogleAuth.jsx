@@ -34,7 +34,6 @@ const GoogleAuth = ({ isSignedIn, signIn, signOut, id }) => {
     });
   }, []);
 
-  console.log(userId);
   const onAuthChange = (status) => {
     if (status) {
       signIn(userId);
@@ -58,7 +57,7 @@ const GoogleAuth = ({ isSignedIn, signIn, signOut, id }) => {
       {isSignedIn ? (
         <button className="ui red google button" onClick={onLogout}>
           <i className="google icon" />
-          Logout {id}
+          Logout
         </button>
       ) : (
         <button className="ui red google button" onClick={onLogin}>
@@ -73,7 +72,6 @@ const GoogleAuth = ({ isSignedIn, signIn, signOut, id }) => {
 const mapStateToProps = (state) => {
   return {
     isSignedIn: state.auth.isSignedIn,
-    id: state.auth.userId,
   };
 };
 
