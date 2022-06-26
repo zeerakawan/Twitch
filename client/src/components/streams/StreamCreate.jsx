@@ -1,12 +1,16 @@
 import { Field, reduxForm } from "redux-form";
 
 const StreamCreate = ({ ...props }) => {
+  // render the form input values
   const renderInput = ({ label, input, meta }) => {
+    // to turn the error field red as well along with the error message
+    const className = `field ${meta.touched && meta.error ? "error" : ""}`;
+
     return (
-      <div className="field">
+      <div className={className}>
         <label>{label}</label>
         <input {...input} />
-        <div>{meta.error}</div>
+        {renderError(meta)}
       </div>
     );
   };
@@ -15,8 +19,19 @@ const StreamCreate = ({ ...props }) => {
     console.log(submitState);
   };
 
+  // generate an error message below to the field
+  const renderError = ({ touched, error }) => {
+    if (touched && error) {
+      return (
+        <div className="ui error message">
+          <div className="header">{error}</div>
+        </div>
+      );
+    }
+  };
+
   return (
-    <form onSubmit={props.handleSubmit(onSubmit)} className="ui form">
+    <form onSubmit={props.handleSubmit(onSubmit)} className="ui form error">
       <Field name="title" component={renderInput} label="Enter Title" />
       <Field
         name="description"
@@ -28,6 +43,7 @@ const StreamCreate = ({ ...props }) => {
   );
 };
 
+// to validate the fields and store the error into state
 const validate = (submitState) => {
   const errors = {};
 
