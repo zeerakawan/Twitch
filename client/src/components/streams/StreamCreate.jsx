@@ -1,4 +1,6 @@
 import { Field, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import { createStream } from "../../redux/actions/actions";
 
 const StreamCreate = ({ ...props }) => {
   // render the form input values
@@ -16,7 +18,8 @@ const StreamCreate = ({ ...props }) => {
   };
 
   const onSubmit = (submitState) => {
-    console.log(submitState);
+    // wiring action creator to take all the cstream values and paste in redux-form store
+    props.createStream(submitState);
   };
 
   // generate an error message below to the field
@@ -58,7 +61,9 @@ const validate = (submitState) => {
   return errors;
 };
 
-export default reduxForm({
+const formWrapper = reduxForm({
   form: "streamCreate",
   validate,
 })(StreamCreate);
+
+export default connect(null, { createStream })(formWrapper);

@@ -7,7 +7,7 @@ import { signIn, signOut } from "../../redux/actions/actions";
 const clientId =
   "803388915075-428terbvbhf35v6vmhr2lpadnc6jtkuv.apps.googleusercontent.com";
 
-const GoogleAuth = ({ isSignedIn, signIn, signOut, id }) => {
+const GoogleAuth = ({ isSignedIn, signIn, signOut }) => {
   const [authStatus, setAuthStatus] = React.useState(null);
   const [userId, setUserId] = React.useState(null);
 
@@ -25,6 +25,7 @@ const GoogleAuth = ({ isSignedIn, signIn, signOut, id }) => {
 
           // taking userid from gapi and storing into state
           setUserId(auth.currentUser.get().getId());
+
           //trigerring the reducer functions to change the status
           onAuthChange(auth.isSignedIn.get());
 
