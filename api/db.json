@@ -4,6 +4,31 @@
       "title": "My stream",
       "description": "My first stream",
       "id": 1
+    },
+    {
+      "title": "First stream",
+      "description": "Hello, my first stream",
+      "id": 2
+    },
+    {
+      "title": "First stream",
+      "description": "Hello, my first stream",
+      "id": 3
+    },
+    {
+      "title": "My stream",
+      "description": "My first stream",
+      "id": 4
+    },
+    {
+      "title": "First stream",
+      "description": "My first stream",
+      "id": 5
+    },
+    {
+      "title": "Elclassico",
+      "description": "Real madrid vs Barcelona 2022-23",
+      "id": 6
     }
   ]
 }
