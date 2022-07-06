@@ -4,8 +4,10 @@ import _ from "lodash";
 export default (state = {}, action) => {
   switch (action.type) {
     case "FETCH_STREAMS":
+      // .mapkeys is a lodash func which maps arrays into objects with making the second pram as a key
       return { ...state, ..._.mapKeys(action.payload, "id") };
     case "CREATE_STREAM":
+      // mentioned {[] = statement} creates a key of a value out of the value in the object
       return { ...state, [action.payload.id]: action.payload };
     case "FETCH_STREAM":
       return { ...state, [action.payload.id]: action.payload };

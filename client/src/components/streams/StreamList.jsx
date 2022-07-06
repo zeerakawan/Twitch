@@ -6,7 +6,7 @@ import { fetchStreams } from "../../redux/actions/actions";
 const StreamList = (props) => {
   useEffect(() => {
     props.fetchStreams();
-  }, []);
+  }, [props]);
 
   const renderList = () => {
     return props.streams.map((stream) => {
@@ -31,6 +31,7 @@ const StreamList = (props) => {
 };
 
 const mapStateToProps = (state) => {
+  // OBJECT.VALUES converts the object values into arrays
   return { streams: Object.values(state.streams) };
 };
 
